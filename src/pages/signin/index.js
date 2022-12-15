@@ -42,30 +42,31 @@ function PageSignin() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    try {
-      const response = await postData(
-        `/cms/auth/signin`,
-        form
 
-        // CARA 2
-        // {
-        //   email: form.email,
-        //   password: form.password,
-        // }
-      );
+    const response = await postData(
+      `/cms/auth/signin`,
+      form
+
+      // CARA 2
+      // {
+      //   email: form.email,
+      //   password: form.password,
+      // }
+    );
+    if (response?.data?.data) {
       // console.log(response.data.data.token);
 
       // localstorage nyimpan 2 item, yaitu key dan value
       // localStorage.setItem('token', response.data.data.token);
-      dispatch(userLogin(response.data.data.token, response.data.data.role));
+      dispatch(userLogin(response.data.data.token, response.data.data.role, response.data.data.email, response.data.data.refreshToken));
       setLoading(false);
       navigate('/');
-    } catch (error) {
+    } else {
       setLoading(false);
       // console.log(error.response.data.msg);
       setAlert({
         status: true,
-        message: error?.response?.data?.msg ?? 'Internal Server Error',
+        message: response?.response?.data?.msg ?? 'Internal Server Error',
         variant: 'danger',
       });
     }
